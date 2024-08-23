@@ -1,7 +1,5 @@
 # Northcoders News API
 
-For instructions, please head over to [L2C NC News](https://l2c.northcoders.com/courses/be/nc-news).
-
 To access this project, please clone to your machine using the link provided
 
 https://github.com/stivan99/Northcoders-News-BE.git
