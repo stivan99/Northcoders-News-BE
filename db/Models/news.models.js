@@ -1,5 +1,6 @@
 const db = require("../connection");
 const format = require("pg-format");
+const endpoints = require("../../endpoints.json");
 
 const selectTopics = () => {
   let queryString = "SELECT * FROM topics";
@@ -15,4 +16,8 @@ const selectTopics = () => {
   });
 };
 
-module.exports = { selectTopics };
+const selectApi = () => {
+  return Promise.resolve(endpoints);
+};
+
+module.exports = { selectTopics, selectApi };

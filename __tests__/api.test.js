@@ -3,6 +3,7 @@ const request = require("supertest");
 const db = require("../db/connection");
 const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data/index");
+const endpointData = require("../endpoints.json");
 
 beforeEach(() => {
   return seed(data);
@@ -30,5 +31,14 @@ describe.only("GET /api/topics", () => {
   });
   test("404: responds with an error message saying that the requested resource does not exist", () => {
     return request(app).get("/api/topicss").expect(404);
+  });
+  test("200: responds with an an object of available endpoints", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .then((response) => {
+        const { body } = response;
+        expect(body).toEqual(endpointData);
+      });
   });
 });
