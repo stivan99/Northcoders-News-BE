@@ -1,4 +1,8 @@
-const { selectTopics, selectApi } = require("../Models/news.models");
+const {
+  selectTopics,
+  selectApi,
+  selectArticle,
+} = require("../Models/news.models");
 
 const getTopics = (request, response, next) => {
   selectTopics()
@@ -20,4 +24,17 @@ const getApi = (request, response, next) => {
     });
 };
 
-module.exports = { getTopics, getApi };
+const getArticle = (request, response, next) => {
+  const article_id = request.params.article_id;
+
+  selectArticle(article_id)
+    .then((data) => {
+      //   console.log(data);
+      response.status(200).send(data);
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+module.exports = { getTopics, getApi, getArticle };
