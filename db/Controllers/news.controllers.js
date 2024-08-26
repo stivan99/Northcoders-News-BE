@@ -1,8 +1,10 @@
+const articles = require("../data/test-data/articles");
 const {
   selectTopics,
   selectApi,
   selectArticle,
   selectArticles,
+  selectCommentByArticle,
 } = require("../Models/news.models");
 
 const getTopics = (request, response, next) => {
@@ -40,6 +42,19 @@ const getArticle = (request, response, next) => {
 const getArticles = (request, response, next) => {
   selectArticles()
     .then((data) => {
+      response.status(200).send(data);
+      //   console.log(data);
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+const getCommentByArticle = (request, response, next) => {
+  const article_id = request.params.article_id;
+
+  selectCommentByArticle(article_id)
+    .then((data) => {
       //   console.log(data);
       response.status(200).send(data);
     })
@@ -47,5 +62,10 @@ const getArticles = (request, response, next) => {
       next(err);
     });
 };
-
-module.exports = { getTopics, getApi, getArticle, getArticles };
+module.exports = {
+  getTopics,
+  getApi,
+  getArticle,
+  getArticles,
+  getCommentByArticle,
+};
