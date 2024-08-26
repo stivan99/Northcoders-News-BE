@@ -6,6 +6,7 @@ const {
   getTopics,
   getApi,
   getArticle,
+  getArticles,
 } = require("../db/Controllers/news.controllers");
 
 const {
@@ -17,6 +18,7 @@ const {
 app.get("/api/topics", getTopics);
 app.get("/api", getApi);
 app.get("/api/articles/:article_id", getArticle);
+app.get("/api/articles", getArticles);
 
 app.use(psqlErrorHandler);
 app.use(customErrorHandler);

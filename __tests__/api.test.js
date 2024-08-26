@@ -80,3 +80,22 @@ describe("GET /api/articles/:article_id", () => {
       });
   });
 });
+describe("GET /api/articles", () => {
+  test("200: responds with an array of articles with the correct properties.", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then((response) => {
+        //const { body } = response;
+        // console.log(response.body);
+        expect(response.body).toHaveLength(13);
+        response.body.forEach((article) => {
+          expect(article).toHaveProperty("topic", expect.any(String));
+          expect(article).toHaveProperty("body", expect.any(String));
+        });
+      });
+  });
+  test("404: responds with an error message saying that the requested resource does not exist", () => {
+    return request(app).get("/api/articless").expect(404);
+  });
+});

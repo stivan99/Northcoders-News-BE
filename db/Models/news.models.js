@@ -39,5 +39,16 @@ const selectArticle = (article_id) => {
     }
   });
 };
+const selectArticles = () => {
+  let queryString = `SELECT * FROM articles`;
 
-module.exports = { selectTopics, selectApi, selectArticle };
+  return db.query(queryString).then((data) => {
+    if (data.rows.length === 0) {
+      return Promise.reject({ status: 400, msg: "Bad request" });
+    } else {
+      return data.rows;
+    }
+  });
+};
+
+module.exports = { selectTopics, selectApi, selectArticle, selectArticles };
