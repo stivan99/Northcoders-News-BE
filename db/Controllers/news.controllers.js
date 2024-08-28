@@ -5,6 +5,7 @@ const {
   selectArticle,
   selectArticles,
   selectCommentByArticle,
+  insertCommentByArticle,
 } = require("../Models/news.models");
 
 const getTopics = (request, response, next) => {
@@ -39,6 +40,7 @@ const getArticle = (request, response, next) => {
       next(err);
     });
 };
+
 const getArticles = (request, response, next) => {
   selectArticles()
     .then((data) => {
@@ -62,10 +64,25 @@ const getCommentByArticle = (request, response, next) => {
       next(err);
     });
 };
+
+const postCommentByArticle = (request, response, next) => {
+  const article_id = request.params.article_id;
+  const { body } = request; //body is the entire comment
+
+  insertCommentByArticle(article_id, body) //const body = request.body
+    .then((data) => {
+      //.send method passes the data as json (if arr or obj)
+      response.status(201).send(data);
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
 module.exports = {
   getTopics,
   getApi,
   getArticle,
   getArticles,
   getCommentByArticle,
+  postCommentByArticle,
 };

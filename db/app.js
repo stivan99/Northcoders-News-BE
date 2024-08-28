@@ -8,6 +8,7 @@ const {
   getArticle,
   getArticles,
   getCommentByArticle,
+  postCommentByArticle,
 } = require("../db/Controllers/news.controllers");
 
 const {
@@ -21,6 +22,7 @@ app.get("/api", getApi);
 app.get("/api/articles/:article_id", getArticle);
 app.get("/api/articles", getArticles);
 app.get("/api/articles/:article_id/comments", getCommentByArticle);
+app.post("/api/articles/:article_id/comments", postCommentByArticle);
 
 app.use(psqlErrorHandler);
 app.use(customErrorHandler);

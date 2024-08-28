@@ -81,10 +81,43 @@ const selectCommentByArticle = (article_id) => {
   });
 };
 
+const insertCommentByArticle = (article_id, body) => {
+  // console.log(body); //body is the comment we want to add
+  if (!body.body || !body.author || !body.article_id) {
+    return Promise.reject({ status: 400, msg: "Bad request" });
+  }
+  return db
+    .query(`SELECT * FROM articles WHERE article_id = $1`, [article_id])
+    .then((output) => {
+      if (output.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "Article doesn not exist" });
+      }
+
+      const commentValues = Object.values(body);
+      console.log(commentValues);
+
+      let queryString = `INSERT INTO comments (body, votes, author, article_id) VALUES (%L) RETURNING *`;
+      const formatString = format(queryString, commentValues);
+
+      return db.query(formatString).then((data) => {
+        console.log(data.rows);
+        return data.rows[0];
+      });
+    });
+};
+
 module.exports = {
   selectTopics,
   selectApi,
   selectArticle,
   selectArticles,
   selectCommentByArticle,
+  insertCommentByArticle,
 };
+
+// alternative to pg-formating
+// const queryString = `INSERT INTO comments (body, votes, author, article_id) VALUES ($1, $2, $3, $4) RETURNING *`;
+// const commentValues = [body.body, body.votes, body.author, article_id];
+// return db.query(queryString, commentValues).then((data) => {
+//   return data.rows[0];
+// });
