@@ -144,3 +144,60 @@ describe("GET /api/articles/:article_id/comments", () => {
       });
   });
 });
+
+describe("POST /api/articles/:article_id/comments", () => {
+  test("201: Responds with the newly created object in the database", () => {
+    const commentToAdd = {
+      body: "This is just testing text",
+      votes: 1,
+      author: "icellusedkars",
+      article_id: 2,
+    };
+    return request(app)
+      .post("/api/articles/2/comments")
+      .send(commentToAdd)
+      .expect(201)
+      .then((response) => {
+        expect(response.body).toEqual({
+          body: "This is just testing text",
+          votes: 1,
+          author: "icellusedkars",
+          article_id: 2,
+          created_at: expect.any(String),
+          comment_id: expect.any(Number),
+        });
+      });
+  });
+  test("400: Responds with an error when comment data is incomplete", () => {
+    const commentToAdd = {
+      body: "This is just testing text",
+      votes: 1,
+      author: "icellusedkars",
+      // article_id: 2,
+    };
+    return request(app)
+      .post("/api/articles/2/comments")
+      .send(commentToAdd)
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad request");
+      });
+  });
+  test("404: Responds with the correct error when the given article_id is invalid", () => {
+    const commentToAdd = {
+      body: "This is just testing text",
+      votes: 1,
+      author: "icellusedkars",
+      article_id: 999,
+      created_at: expect.any(String),
+      comment_id: expect.any(Number),
+    };
+    return request(app)
+      .post("/api/articles/999/comments")
+      .send(commentToAdd)
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Article doesn not exist");
+      });
+  });
+});

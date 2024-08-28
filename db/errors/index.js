@@ -1,6 +1,6 @@
 exports.psqlErrorHandler = (err, request, response, next) => {
   // console.log(err);
-  if (["42703", "42601"].includes(err.code)) {
+  if (["22P02"].includes(err.code)) {
     response.status(400).send({ msg: "Bad request" });
   } else {
     next(err);
