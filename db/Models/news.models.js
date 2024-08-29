@@ -94,15 +94,50 @@ const insertCommentByArticle = (article_id, body) => {
       }
 
       const commentValues = Object.values(body);
-      console.log(commentValues);
+      // console.log(commentValues);
 
       let queryString = `INSERT INTO comments (body, votes, author, article_id) VALUES (%L) RETURNING *`;
       const formatString = format(queryString, commentValues);
 
       return db.query(formatString).then((data) => {
-        console.log(data.rows);
+        // console.log(data.rows);
         return data.rows[0];
       });
+    });
+};
+
+const updateVotes = (article_id, inc_votes) => {
+  if (typeof inc_votes !== "number") {
+    return Promise.reject({ status: 400, msg: "Bad request" });
+  }
+  if (!article_id) {
+    return Promise.reject({ status: 400, msg: "Bad request" });
+  }
+  if (typeof article_id !== "number") {
+    article_id = Number(article_id);
+  }
+
+  let queryString = `SELECT * FROM articles WHERE article_id = $1`;
+  let queryValues = [article_id];
+
+  return db
+    .query(queryString, queryValues)
+    .then((data) => {
+      // console.log(data.rows);
+      if (data.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "Article does not exist" });
+      }
+
+      let newQueryString = `UPDATE articles
+        SET votes = votes + $1
+        WHERE article_id = $2
+        RETURNING *;`;
+      let newQueryValues = [inc_votes, article_id];
+
+      return db.query(newQueryString, newQueryValues);
+    })
+    .then((result) => {
+      return result.rows[0];
     });
 };
 
@@ -113,6 +148,7 @@ module.exports = {
   selectArticles,
   selectCommentByArticle,
   insertCommentByArticle,
+  updateVotes,
 };
 
 // alternative to pg-formating

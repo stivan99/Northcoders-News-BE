@@ -6,6 +6,7 @@ const {
   selectArticles,
   selectCommentByArticle,
   insertCommentByArticle,
+  updateVotes,
 } = require("../Models/news.models");
 
 const getTopics = (request, response, next) => {
@@ -78,6 +79,20 @@ const postCommentByArticle = (request, response, next) => {
       next(err);
     });
 };
+
+const patchArticle = (request, response, next) => {
+  const article_id = request.params.article_id;
+  const { inc_votes } = request.body;
+  updateVotes(article_id, inc_votes)
+    .then((data) => {
+      console.log(data);
+
+      response.status(200).send(data);
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
 module.exports = {
   getTopics,
   getApi,
@@ -85,4 +100,5 @@ module.exports = {
   getArticles,
   getCommentByArticle,
   postCommentByArticle,
+  patchArticle,
 };

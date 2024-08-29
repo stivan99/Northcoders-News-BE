@@ -201,3 +201,45 @@ describe("POST /api/articles/:article_id/comments", () => {
       });
   });
 });
+
+describe("PATCH /api/articles/:article_id", () => {
+  test("200: updates the vote count of an existing article with the given value", () => {
+    const body = {
+      inc_votes: 10,
+    };
+
+    return request(app)
+      .patch("/api/articles/1")
+      .send(body)
+      .expect(200)
+      .then((response) => {
+        expect(response.body).toHaveProperty("votes");
+      });
+  });
+  test("400: responds with bad request if invalid data type is given for inc_votes", () => {
+    const body = {
+      inc_votes: "ten",
+    };
+
+    return request(app)
+      .patch("/api/articles/1")
+      .send(body)
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("Bad request");
+      });
+  });
+  test("404: Article does not exist if article_id is out of range", () => {
+    const body = {
+      inc_votes: 10,
+    };
+
+    return request(app)
+      .patch("/api/articles/999")
+      .send(body)
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("Article does not exist");
+      });
+  });
+});
