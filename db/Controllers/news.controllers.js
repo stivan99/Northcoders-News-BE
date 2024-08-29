@@ -85,8 +85,7 @@ const patchArticle = (request, response, next) => {
   const { inc_votes } = request.body;
   updateVotes(article_id, inc_votes)
     .then((data) => {
-      console.log(data);
-
+      //console.log(data);
       response.status(200).send(data);
     })
     .catch((err) => {
