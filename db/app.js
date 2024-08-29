@@ -10,6 +10,7 @@ const {
   getCommentByArticle,
   postCommentByArticle,
   patchArticle,
+  deleteComment,
 } = require("../db/Controllers/news.controllers");
 
 const {
@@ -25,6 +26,7 @@ app.get("/api/articles", getArticles);
 app.get("/api/articles/:article_id/comments", getCommentByArticle);
 app.post("/api/articles/:article_id/comments", postCommentByArticle);
 app.patch("/api/articles/:article_id", patchArticle);
+app.delete("/api/comments/:comment_id", deleteComment);
 
 app.use(psqlErrorHandler);
 app.use(customErrorHandler);

@@ -243,3 +243,35 @@ describe("PATCH /api/articles/:article_id", () => {
       });
   });
 });
+
+describe("DELETE /api/comments/comment_id", () => {
+  test("204: should delete the comment with the associated comment_id and return an empty body", () => {
+    return request(app)
+      .delete("/api/comments/1")
+      .expect(204)
+      .then((response) => {
+        const { body } = response;
+        expect(body).toEqual({});
+        return request(app).get("/api/comments/1").expect(404);
+      });
+  });
+
+  test("404: returns error stating that the comment_id does not exist", () => {
+    return request(app)
+      .delete("/api/comments/100")
+      .expect(404)
+      .then((response) => {
+        const { body } = response;
+        expect(body.msg).toEqual("Comment_id does not exist");
+      });
+  });
+  test("400: should return a bad request message if comment_id is invalid", () => {
+    return request(app)
+      .delete("/api/comments/one")
+      .expect(400)
+      .then((response) => {
+        const { body } = response;
+        expect(body.msg).toEqual("Bad request");
+      });
+  });
+});

@@ -39,6 +39,7 @@ const selectArticle = (article_id) => {
     }
   });
 };
+
 const selectArticles = () => {
   let queryString = ` SELECT 
         articles.article_id,
@@ -60,6 +61,7 @@ const selectArticles = () => {
     }
   });
 };
+
 const selectCommentByArticle = (article_id) => {
   let queryString = `SELECT * FROM comments`;
   let queryValues = [];
@@ -141,6 +143,26 @@ const updateVotes = (article_id, inc_votes) => {
     });
 };
 
+const deleteCommentById = (comment_id) => {
+  comment_id = Number(comment_id);
+  if (isNaN(comment_id)) {
+    return Promise.reject({ status: 400, msg: "Bad request" });
+  }
+  let queryString = `DELETE FROM comments 
+  WHERE comment_id = $1
+  RETURNING *`;
+  let queryValue = [comment_id];
+
+  return db.query(queryString, queryValue).then((result) => {
+    if (result.rowCount === 0) {
+      return Promise.reject({ status: 404, msg: "Comment_id does not exist" });
+    }
+    //console.log(result);
+
+    return result;
+  });
+};
+
 module.exports = {
   selectTopics,
   selectApi,
@@ -149,6 +171,7 @@ module.exports = {
   selectCommentByArticle,
   insertCommentByArticle,
   updateVotes,
+  deleteCommentById,
 };
 
 // alternative to pg-formating
