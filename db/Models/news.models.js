@@ -163,6 +163,13 @@ const deleteCommentById = (comment_id) => {
   });
 };
 
+const selectUsers = () => {
+  let queryString = "SELECT * FROM users";
+
+  return db.query(queryString).then((data) => {
+    return data.rows;
+  });
+};
 module.exports = {
   selectTopics,
   selectApi,
@@ -172,6 +179,7 @@ module.exports = {
   insertCommentByArticle,
   updateVotes,
   deleteCommentById,
+  selectUsers,
 };
 
 // alternative to pg-formating

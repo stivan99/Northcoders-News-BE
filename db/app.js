@@ -11,6 +11,7 @@ const {
   postCommentByArticle,
   patchArticle,
   deleteComment,
+  getUsers,
 } = require("../db/Controllers/news.controllers");
 
 const {
@@ -27,6 +28,7 @@ app.get("/api/articles/:article_id/comments", getCommentByArticle);
 app.post("/api/articles/:article_id/comments", postCommentByArticle);
 app.patch("/api/articles/:article_id", patchArticle);
 app.delete("/api/comments/:comment_id", deleteComment);
+app.get("/api/users", getUsers);
 
 app.use(psqlErrorHandler);
 app.use(customErrorHandler);
