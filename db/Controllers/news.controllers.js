@@ -8,6 +8,7 @@ const {
   insertCommentByArticle,
   updateVotes,
   deleteCommentById,
+  selectUsers,
 } = require("../Models/news.models");
 
 const getTopics = (request, response, next) => {
@@ -105,6 +106,19 @@ const deleteComment = (request, response, next) => {
     });
 };
 
+const getUsers = (request, response, next) => {
+  selectUsers()
+    .then((result) => {
+      response.status(200).send({ users: result });
+    })
+    .catch((err) => {
+      console.log(err);
+
+      next(err);
+      console.log(err);
+    });
+};
+
 module.exports = {
   getTopics,
   getApi,
@@ -114,4 +128,5 @@ module.exports = {
   postCommentByArticle,
   patchArticle,
   deleteComment,
+  getUsers,
 };

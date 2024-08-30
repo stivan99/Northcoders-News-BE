@@ -33,6 +33,7 @@ describe("GET /api/topics", () => {
     return request(app).get("/api/topicss").expect(404);
   });
 });
+
 describe("GET /api", () => {
   test("200: responds with an an object of available endpoints", () => {
     return request(app)
@@ -273,5 +274,26 @@ describe("DELETE /api/comments/comment_id", () => {
         const { body } = response;
         expect(body.msg).toEqual("Bad request");
       });
+  });
+});
+
+describe("GET /api/users", () => {
+  test("200: responds with an array of objects with the properties of username, name and avatar_url.", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then((response) => {
+        const { body } = response; // body is the same as results from controller
+        expect(body).toHaveProperty("users");
+        expect(body.users).toHaveLength(4);
+        body.users.forEach((user) => {
+          expect(user).toHaveProperty("username", expect.any(String));
+          expect(user).toHaveProperty("name", expect.any(String));
+          expect(user).toHaveProperty("avatar_url", expect.any(String));
+        });
+      });
+  });
+  test("404: responds with an error message saying that the requested resource does not exist", () => {
+    return request(app).get("/api/usersss").expect(404);
   });
 });
