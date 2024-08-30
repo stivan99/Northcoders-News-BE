@@ -45,10 +45,12 @@ const getArticle = (request, response, next) => {
 };
 
 const getArticles = (request, response, next) => {
-  selectArticles()
+  const sortBy = request.query.sortBy;
+  const order = request.query.order;
+
+  selectArticles(sortBy, order)
     .then((data) => {
       response.status(200).send(data);
-      //   console.log(data);
     })
     .catch((err) => {
       next(err);

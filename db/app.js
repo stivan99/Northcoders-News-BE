@@ -30,6 +30,7 @@ app.patch("/api/articles/:article_id", patchArticle);
 app.delete("/api/comments/:comment_id", deleteComment);
 app.get("/api/users", getUsers);
 
+//app.all("*", notFoundHandler);
 app.use(psqlErrorHandler);
 app.use(customErrorHandler);
 app.use(serverErrorHandler);

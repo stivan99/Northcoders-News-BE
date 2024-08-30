@@ -107,6 +107,61 @@ describe("GET /api/articles", () => {
   test("404: responds with an error message saying that the requested resource does not exist", () => {
     return request(app).get("/api/articless").expect(404);
   });
+  test("200: responds with an array in order specified by the user", () => {
+    return request(app)
+      .get("/api/articles?order=asc")
+      .expect(200)
+      .then((response) => {
+        expect(response.body).toBeSortedBy("", {
+          descending: false,
+        });
+        return request(app)
+          .get("/api/articles?order=desc")
+          .expect(200)
+          .then((response) => {
+            expect(response.body).toBeSortedBy("", {
+              descending: true,
+            });
+          });
+      });
+  });
+  test("200: responds with an array sorted by parameter specified by the user in default order", () => {
+    return request(app)
+      .get("/api/articles?sortBy=article_id")
+      .expect(200)
+      .then((response) => {
+        //console.log(response);
+        expect(response.body).toBeSortedBy("article_id", {
+          descending: true,
+        });
+      });
+  });
+  test("200: responds with an ordered array sorted by parameter specified by the user", () => {
+    return request(app)
+      .get("/api/articles?sortBy=title&order=asc")
+      .expect(200)
+      .then((response) => {
+        expect(response.body).toBeSortedBy("title", {
+          descending: false,
+        });
+      });
+  });
+  test("400: responds with an error if sortBy parameter is invalid", () => {
+    return request(app)
+      .get("/api/articles?sortBy=invalidParameter")
+      .expect(400)
+      .then((response) => {
+        expect(response.body).toEqual({ msg: "Bad request" });
+      });
+  });
+  test("400: responds with an error if order parameter is invalid", () => {
+    return request(app)
+      .get("/api/articles?order=invalidOrder")
+      .expect(400)
+      .then((response) => {
+        expect(response.body).toEqual({ msg: "Bad request" });
+      });
+  });
 });
 
 describe("GET /api/articles/:article_id/comments", () => {
