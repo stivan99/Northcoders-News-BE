@@ -40,7 +40,7 @@ const selectArticle = (article_id) => {
   });
 };
 
-const selectArticles = (sortBy = "created_at", order = "desc") => {
+const selectArticles = (sortBy = "created_at", order = "desc", topic) => {
   const validSortby = [
     "article_id",
     "title",
@@ -52,6 +52,8 @@ const selectArticles = (sortBy = "created_at", order = "desc") => {
     "comment_count",
   ];
   const validOrderBy = ["ASC", "DESC"];
+
+  const validTopics = ["mitch", "cats"];
 
   if (!validSortby.includes(sortBy)) {
     return Promise.reject({ status: 400, msg: "Bad request" });
@@ -68,12 +70,24 @@ const selectArticles = (sortBy = "created_at", order = "desc") => {
         articles.created_at,
         articles.votes,
         articles.article_img_url,
-        COUNT(comments.comment_id)::INTEGER AS comment_count FROM articles 
-        LEFT JOIN comments ON articles.article_id = comments.article_id 
-        GROUP BY articles.article_id 
+        COUNT(comments.comment_id)::INTEGER AS comment_count 
+        FROM articles 
+        LEFT JOIN comments ON articles.article_id = comments.article_id`;
+
+  const queryValue = [];
+  if (topic) {
+    if (!validTopics.includes(topic)) {
+      return Promise.reject({ status: 400, msg: "Bad request" });
+    } else {
+      queryString += ` WHERE articles.topic = $1`;
+      queryValue.push(topic);
+    }
+  }
+
+  queryString += ` GROUP BY articles.article_id 
         ORDER BY ${sortBy} ${order.toUpperCase()}`;
 
-  return db.query(queryString).then((data) => {
+  return db.query(queryString, queryValue).then((data) => {
     // console.log(data);
 
     if (data.rows.length === 0) {
