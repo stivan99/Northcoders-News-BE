@@ -154,12 +154,37 @@ describe("GET /api/articles", () => {
         expect(response.body).toEqual({ msg: "Bad request" });
       });
   });
-  test("400: responds with an error if order parameter is invalid", () => {
+  test("200: responds with an array of all the articles with the specified topic", () => {
     return request(app)
-      .get("/api/articles?order=invalidOrder")
+      .get("/api/articles?topic=cats")
+      .expect(200)
+      .then((response) => {
+        expect(response.body).toBeArray();
+        response.body.forEach((article) => {
+          expect(article.topic).toBe("cats");
+        });
+      });
+  });
+  test("400: responds with an error if topic parameter is invalid", () => {
+    return request(app)
+      .get("/api/articles?topic=invalidParameter")
       .expect(400)
       .then((response) => {
         expect(response.body).toEqual({ msg: "Bad request" });
+      });
+  });
+  test("200: responds with an array of articles with a specified topic `mitch` that are sorted by specified cateogry author in specified order descending", () => {
+    return request(app)
+      .get("/api/articles?topic=mitch&sortBy=author&order=desc")
+      .expect(200)
+      .then((response) => {
+        expect(response.body).toBeArray();
+        response.body.forEach((article) => {
+          expect(article.topic).toBe("mitch");
+          expect(response.body).toBeSortedBy("author", {
+            descending: true,
+          });
+        });
       });
   });
 });

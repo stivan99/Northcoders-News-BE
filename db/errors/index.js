@@ -17,6 +17,6 @@ exports.customErrorHandler = (err, request, response, next) => {
 };
 
 exports.serverErrorHandler = (err, request, response, next) => {
-  //console.log(err, "<------- you are in serverErrorHandler !");
+  console.log(err, "<------- you are in serverErrorHandler !");
   response.status(500).send({ msg: "Internal Server Error" });
 };

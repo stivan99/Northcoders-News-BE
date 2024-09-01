@@ -47,8 +47,8 @@ const getArticle = (request, response, next) => {
 const getArticles = (request, response, next) => {
   const sortBy = request.query.sortBy;
   const order = request.query.order;
-
-  selectArticles(sortBy, order)
+  const topic = request.query.topic;
+  selectArticles(sortBy, order, topic)
     .then((data) => {
       response.status(200).send(data);
     })
