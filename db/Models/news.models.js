@@ -105,7 +105,7 @@ const selectCommentByArticle = (article_id) => {
   if (Number(article_id)) {
     queryString += ` WHERE article_id = $1`;
     queryValues.push(Number(article_id));
-    queryString += `ORDER BY created_at DESC`;
+    queryString += ` ORDER BY created_at DESC`;
     // console.log(queryString);
   } else {
     return Promise.reject({ status: 400, msg: "Bad request" });
